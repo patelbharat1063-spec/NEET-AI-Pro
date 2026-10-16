@@ -451,4 +451,273 @@ function startTest() {
   testIndex = 0;
   testActive = true;
   testStartedAt = Date.now();
-  const minutes = Math.max(0, Number($("cb
+  const minutes = Math.max(0, Number($("cbtMinutes").value) || 0);
+  testDeadline = minutes ? Date.now() + minutes*60000 : null;
+  $("testArea").classList.remove("hidden");
+  $("testResult").classList.add("hidden");
+  $("testFeedback").classList.add("hidden");
+  if (testDeadline) {
+    $("timer").textContent = "Time remaining: " + minutes + " minutes";
+    timerHandle = setInterval(updateTimer,1000);
+  } else $("timer").textContent = "Timer disabled";
+  renderTestQuestion();
+}
+
+function stopTimer() {
+  if (timerHandle) clearInterval(timerHandle);
+  timerHandle = null;
+}
+
+function updateTimer() {
+  if (!testActive || !testDeadline) return;
+  const left = Math.max(0, testDeadline-Date.now());
+  const mins = Math.floor(left/60000);
+  const secs = Math.floor((left%60000)/1000);
+  $("timer").textContent = "Time remaining: " + mins + ":" + String(secs).padStart(2,"0");
+  if (left <= 0) finishTest(true);
+}
+
+function renderTestQuestion() {
+  const q = testQuestions[testIndex];
+  if (!q) return;
+  $("questionNumber").textContent = "Question " + (testIndex+1);
+  $("testProgress").textContent = (testIndex+1) + " of " + testQuestions.length;
+  $("testQuestion").textContent = q.question;
+  const box = $("testOptions");
+  box.replaceChildren();
+  ["A","B","C","D"].forEach((letter,i) => {
+    const label = document.createElement("label");
+    label.className = "option";
+    const input = document.createElement("input");
+    input.type = "radio";
+    input.name = "testOption";
+    input.value = letter;
+    input.checked = testAnswers[q.id] === letter;
+    input.addEventListener("change", () => { testAnswers[q.id] = letter; });
+    label.append(input,document.createTextNode(letter + ". " + (q.options[i] || "(empty)")));
+    box.appendChild(label);
+  });
+  $("prevQ").disabled = testIndex === 0;
+  $("nextQ").disabled = testIndex === testQuestions.length-1;
+  $("testFeedback").classList.add("hidden");
+}
+
+async function finishTest(auto=false) {
+  if (!testActive) return;
+  if (!auto && !confirm("Submit this test now?")) return;
+  testActive = false;
+  stopTimer();
+  const responses = testQuestions.map(q => ({
+    questionId:q.id,
+    subject:q.subject,
+    chapter:q.chapter,
+    question:q.question,
+    selected:testAnswers[q.id] || "",
+    answer:q.answer || "",
+    correct:Boolean(q.answer && testAnswers[q.id] === q.answer)
+  }));
+  const correct = responses.filter(r=>r.correct).length;
+  const answered = responses.filter(r=>r.selected).length;
+  const attempt = {
+    id:makeId(),
+    date:new Date().toISOString(),
+    subject:$("cbtSubject").value,
+    total:responses.length,
+    answered,
+    correct,
+    incorrect:responses.filter(r=>r.selected && !r.correct).length,
+    unanswered:responses.length-answered,
+    responses,
+    durationSeconds:Math.max(0,Math.round((Date.now()-testStartedAt)/1000))
+  };
+  try {
+    await putRecord("attempts",attempt);
+    await refreshData();
+    $("testResult").classList.remove("hidden");
+    $("testResult").replaceChildren();
+    const h = document.createElement("h2"); h.textContent = auto ? "Time is up — test submitted" : "Test result";
+    const p = document.createElement("p"); p.textContent = "Score: "+correct+"/"+responses.length+" ("+Math.round(correct/Math.max(1,responses.length)*100)+"%). Answered: "+answered+". Incorrect: "+attempt.incorrect+". Unanswered: "+attempt.unanswered+".";
+    $("testResult").append(h,p);
+    const review = document.createElement("h3"); review.textContent = "Answer review";
+    $("testResult").appendChild(review);
+    responses.forEach((r,i)=>{
+      const item = document.createElement("div"); item.className="notice";
+      const q = testQuestions[i];
+      const title = document.createElement("p"); title.textContent=(i+1)+". "+q.question;
+      const result = document.createElement("p"); result.className=r.correct?"correct":(r.selected?"incorrect":""); result.textContent="Your answer: "+(r.selected||"Not answered")+" • Correct answer: "+(r.answer||"Not provided");
+      const exp = document.createElement("p"); exp.textContent=q.explanation||"No explanation available.";
+      item.append(title,result,exp); $("testResult").appendChild(item);
+    });
+    $("testResult").scrollIntoView({behavior:"smooth",block:"start"});
+  } catch(e) { alert("Could not save test attempt: "+e.message); }
+  $("timer").textContent="Test finished";
+}
+
+$("startCbt").addEventListener("click",startTest);
+$("stopCbt").addEventListener("click",()=>finishTest(false));
+$("submitTest").addEventListener("click",()=>finishTest(false));
+$("prevQ").addEventListener("click",()=>{if(testIndex>0){testIndex--;renderTestQuestion();}});
+$("nextQ").addEventListener("click",()=>{if(testIndex<testQuestions.length-1){testIndex++;renderTestQuestion();}});
+$("searchBank").addEventListener("click",renderBank);
+$("refreshBank").addEventListener("click",renderBank);
+$("bankSearch").addEventListener("input",renderBank);
+$("bankSubject").addEventListener("change",renderBank);
+$("bankChapter").addEventListener("input",renderBank);
+
+function clearQuestionForm() {
+  ["qChapter","qTopic","qText","optA","optB","optC","optD","qExplanation"].forEach(id=>$(id).value="");
+  $("qSubject").value="Biology";
+  $("qAnswer").value="A";
+}
+
+$("clearQuestion").addEventListener("click",clearQuestionForm);
+$("saveQuestion").addEventListener("click",async()=>{
+  const raw={
+    id:makeId(),
+    subject:$("qSubject").value,
+    chapter:$("qChapter").value.trim(),
+    topic:$("qTopic").value.trim(),
+    question:$("qText").value.trim(),
+    options:[$("optA").value.trim(),$("optB").value.trim(),$("optC").value.trim(),$("optD").value.trim()],
+    answer:$("qAnswer").value,
+    explanation:$("qExplanation").value.trim(),
+    source:"User added"
+  };
+  if(!raw.chapter||!raw.question||raw.options.some(o=>!o)){
+    alert("Please enter the chapter, question and all four options.");
+    return;
+  }
+  try {
+    await putRecord("questions",raw);
+    await refreshData();
+    clearQuestionForm();
+    alert("Question saved to this browser.");
+  } catch(e){alert("Save failed: "+e.message);}
+});
+
+function extractQuestionArray(data) {
+  if(Array.isArray(data)) return data;
+  if(data && Array.isArray(data.questions)) return data.questions;
+  if(data && data.data && Array.isArray(data.data.questions)) return data.data.questions;
+  if(data && data.results && Array.isArray(data.results)) return data.results;
+  throw new Error("Could not find a questions array in this JSON file.");
+}
+
+async function importQuestionFile(file, statusElement) {
+  if(!file) throw new Error("Choose a JSON file first.");
+  const data=JSON.parse(await file.text());
+  const arr=extractQuestionArray(data);
+  let added=0, skipped=0;
+  for(const raw of arr) {
+    const q=normalizeQuestion(raw);
+    if(!q){skipped++;continue;}
+    // Preserve an incoming ID where possible; duplicate IDs update the same record.
+    await putRecord("questions",q);
+    added++;
+  }
+  await refreshData();
+  statusElement.textContent="Import finished. Processed "+added+" question(s); skipped "+skipped+". Existing records were not cleared.";
+  statusElement.classList.remove("hidden");
+}
+
+$("importJson").addEventListener("click",async()=>{
+  $("importStatus").classList.remove("hidden");
+  try{await importQuestionFile($("jsonFile").files[0],$("importStatus"));}
+  catch(e){$("importStatus").textContent="Import error: "+e.message;}
+});
+
+function downloadJSON(filename,data) {
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+$("exportBackup").addEventListener("click",async()=>{
+  try{
+    const questions=await getAll("questions");
+    const attempts=await getAll("attempts");
+    downloadJSON("neet-ai-pro-backup-"+new Date().toISOString().slice(0,10)+".json",{
+      app:"NEET AI Pro",version:1,exportedAt:new Date().toISOString(),questions,attempts
+    });
+    $("backupStatus").textContent="Backup download requested. Check your Downloads folder.";
+    $("backupStatus").classList.remove("hidden");
+  }catch(e){alert("Backup failed: "+e.message);}
+});
+
+$("restoreBackup").addEventListener("click",async()=>{
+  const file=$("restoreFile").files[0];
+  const status=$("backupStatus");
+  status.classList.remove("hidden");
+  try{
+    if(!file) throw new Error("Choose a backup JSON file first.");
+    const data=JSON.parse(await file.text());
+    let qCount=0,aCount=0;
+    const qs=Array.isArray(data)?data:(data.questions||data.data?.questions||[]);
+    for(const raw of qs){
+      const q=normalizeQuestion(raw);
+      if(q){await putRecord("questions",q);qCount++;}
+    }
+    if(Array.isArray(data.attempts)){
+      for(const a of data.attempts){
+        if(a && typeof a==="object"){
+          const record={...a,id:String(a.id||makeId())};
+          await putRecord("attempts",record);aCount++;
+        }
+      }
+    }
+    await refreshData();
+    status.textContent="Restore/merge complete. Questions processed: "+qCount+". Attempts processed: "+aCount+". Current records were not cleared.";
+  }catch(e){status.textContent="Restore error: "+e.message;}
+});
+
+function renderAnalysis() {
+  const responses=allAttempts.flatMap(a=>Array.isArray(a.responses)?a.responses:[]);
+  const correct=responses.filter(r=>r.correct).length;
+  $("anaAttempted").textContent=responses.filter(r=>r.selected).length;
+  $("anaCorrect").textContent=correct;
+  $("anaAccuracy").textContent=(responses.length?Math.round(correct/responses.length*100):0)+"%";
+  $("anaTests").textContent=allAttempts.length;
+  const subjects=["Biology","Physics","Chemistry"];
+  const summary=$("subjectAnalysis");summary.replaceChildren();
+  subjects.forEach(s=>{
+    const subset=responses.filter(r=>r.subject===s);
+    const c=subset.filter(r=>r.correct).length;
+    const p=document.createElement("p");
+    p.textContent=s+": "+c+" correct out of "+subset.length+" recorded response(s)"+(subset.length?" ("+Math.round(c/subset.length*100)+"%)":"");
+    summary.appendChild(p);
+  });
+  const list=$("attemptList");list.replaceChildren();
+  if(!allAttempts.length){list.textContent="No completed test attempts yet.";return;}
+  [...allAttempts].sort((a,b)=>String(b.date||"").localeCompare(String(a.date||""))).slice(0,30).forEach(a=>{
+    const p=document.createElement("p");
+    p.textContent=(a.date?new Date(a.date).toLocaleString():"Test")+" — "+(a.subject||"All subjects")+" — "+(a.correct||0)+"/"+(a.total||0)+" correct";
+    list.appendChild(p);
+  });
+}
+
+$("clearKey").addEventListener("click",()=>$("aiKey").value="");
+
+async function init() {
+  if(!("indexedDB" in window)){
+    setStatus("This browser does not support IndexedDB. Open the app in a modern browser.");
+    return;
+  }
+  try{
+    await openDatabase();
+    await refreshData();
+    renderBank();
+    renderAnalysis();
+    $("settingsStatus").textContent="Database: "+DB_NAME+". Questions and attempts are stored locally in this browser.";
+    setStatus("Local database opened successfully. "+allQuestions.length+" question(s) found.");
+  }catch(e){
+    setStatus("Database error: "+e.message+". Do not clear browser data while troubleshooting.");
+    console.error(e);
+  }
+}
+
+init();
+</script>
+</body>
+</html>
