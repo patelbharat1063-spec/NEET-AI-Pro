@@ -4,59 +4,44 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#17324d">
 <title>NEET AI Pro | Bharat Patel</title>
 <style>
-:root{--navy:#17324d;--teal:#087e8b;--bg:#f2f6fa;--ink:#172b3a;--muted:#627688;--line:#d8e1e9;--white:#fff;--green:#147d50;--red:#bb3030}
+:root{--navy:#17324d;--teal:#087e8b;--bg:#f2f6fa;--ink:#172b3a;--line:#d8e1e9}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px Arial,sans-serif}
-header{background:var(--navy);color:white;padding:20px 16px}
-header h1{margin:0 0 6px;font-size:25px}
-header p{margin:0;color:#d8e9f2;font-size:13px}
-nav{display:flex;gap:7px;overflow-x:auto;padding:10px;background:white;border-bottom:1px solid var(--line)}
-nav button{white-space:nowrap}
-button,.btn{border:0;border-radius:8px;background:var(--teal);color:white;padding:10px 13px;font-weight:600;cursor:pointer}
-button.secondary{background:#e6edf3;color:var(--navy)}
-button.danger{background:#a52c2c}
-button:disabled{opacity:.45;cursor:not-allowed}
-main{max-width:1100px;margin:auto;padding:14px}
-.panel{background:white;border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
-h2{font-size:20px;margin:0 0 14px}
-h3{font-size:16px;margin:0 0 10px}
-p{line-height:1.5}
-.muted{color:var(--muted);font-size:13px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}
-.stat{background:#edf5f8;border-radius:10px;padding:15px}
-.stat strong{font-size:25px;display:block;margin-bottom:4px;color:var(--navy)}
-label{display:block;font-weight:600;font-size:13px;margin:10px 0 5px}
-input,select,textarea{width:100%;padding:11px;border:1px solid #cbd7e0;border-radius:8px;background:white;color:var(--ink);font:inherit}
-textarea{min-height:75px;resize:vertical}
-.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+header{background:var(--navy);color:white;padding:18px}
+header h1{margin:0 0 6px}
+nav{display:flex;gap:6px;overflow:auto;padding:10px;background:white}
+button{border:0;border-radius:7px;background:var(--teal);color:white;padding:10px 12px;font-weight:bold;cursor:pointer}
+button.secondary{background:#e4ebf1;color:var(--navy)}
+button:disabled{opacity:.5}
+main{max-width:1000px;margin:auto;padding:12px}
+.panel{background:white;padding:16px;margin:12px 0;border-radius:10px;box-shadow:0 1px 4px #ccd4dc}
+label{display:block;font-weight:bold;margin:10px 0 5px}
+input,select,textarea{width:100%;padding:10px;border:1px solid #cbd7e0;border-radius:7px;font:inherit}
+textarea{min-height:75px}
+.row,.grid{display:flex;gap:9px;flex-wrap:wrap}
 .row>*{flex:1}
+.grid>*{flex:1;min-width:120px}
+.stat{background:#edf5f7;padding:12px;border-radius:8px}
+.stat strong{display:block;font-size:23px}
 .hidden{display:none!important}
-.notice{padding:11px;border-radius:8px;background:#eef5f8;margin:8px 0;overflow-wrap:anywhere}
-.question{font-size:17px;line-height:1.55;margin:12px 0}
-.option{display:block;padding:11px;margin:8px 0;border:1px solid var(--line);border-radius:8px;cursor:pointer;font-weight:400}
-.option:has(input:checked){border-color:var(--teal);background:#edf8f8}
-.option input{width:auto;margin-right:8px}
-.correct{color:var(--green);font-weight:700}
-.incorrect{color:var(--red);font-weight:700}
-table{border-collapse:collapse;width:100%;font-size:13px}
-th,td{padding:9px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
-.scroll{overflow-x:auto}
-footer{text-align:center;padding:20px;color:var(--muted);font-size:12px}
-@media(min-width:700px){main{padding:22px}.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}}
+.notice{background:#edf5f7;padding:10px;border-radius:7px;overflow-wrap:anywhere}
+.muted{color:#627688;font-size:13px}
+.card{border:1px solid var(--line);padding:12px;margin:10px 0;border-radius:8px;background:white}
+.option{display:block;margin:8px 0;padding:9px;border:1px solid var(--line);border-radius:7px}
+footer{text-align:center;padding:20px;color:#627688}
 </style>
 </head>
 <body>
 <header>
 <h1>🧬 NEET AI Pro</h1>
-<p>Biology • Physics • Chemistry | Practice, CBT, Question Bank</p>
-<p style="margin-top:8px">Created by Bharat Patel</p>
+<p>Biology • Physics • Chemistry • MCQ Generator • CBT</p>
+<p>Created by Bharat Patel</p>
 </header>
-
-<nav id="nav">
+<nav>
 <button data-page="home">Home</button>
+<button data-page="generate">MCQ Generator</button>
 <button data-page="cbt">CBT Practice</button>
 <button data-page="bank">Question Bank</button>
 <button data-page="add">Add MCQ</button>
@@ -64,75 +49,69 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:12px}
 <button data-page="backup">Backup</button>
 <button data-page="settings">Settings</button>
 </nav>
-
 <main>
-<div id="status" class="notice">Opening local question database…</div>
+<div id="status" class="notice">Opening local database…</div>
 
 <section id="page-home" class="page">
 <div class="panel">
-<h2>Welcome to NEET AI Pro</h2>
-<p>Practice MCQs, run a timed test, manage your question bank and review your performance.</p>
+<h2>Dashboard</h2>
 <div class="grid">
-<div class="stat"><strong id="totalQ">0</strong><span>Questions stored</span></div>
-<div class="stat"><strong id="totalA">0</strong><span>Questions attempted</span></div>
-<div class="stat"><strong id="accuracy">0%</strong><span>Accuracy</span></div>
-<div class="stat"><strong id="totalTests">0</strong><span>Saved attempts</span></div>
+<div class="stat"><strong id="totalQ">0</strong>Saved MCQs</div>
+<div class="stat"><strong id="totalTests">0</strong>Test attempts</div>
 </div>
+<p>Generated MCQs are saved in this browser on this device.</p>
+<button onclick="showPage('generate')">Generate MCQs</button>
+<button class="secondary" onclick="showPage('bank')">Open Question Bank</button>
 </div>
+</section>
+
+<section id="page-generate" class="page hidden">
 <div class="panel">
-<h2>Quick start</h2>
+<h2>AI MCQ Generator</h2>
+<p class="muted">Generate draft NEET-style MCQs using the OpenAI API. Review them before saving.</p>
+<label>Subject</label>
+<select id="genSubject">
+<option>Biology</option><option>Physics</option><option>Chemistry</option>
+</select>
+<label>Chapter</label>
+<input id="genChapter" placeholder="e.g. Cell: The Unit of Life">
+<label>Topic</label>
+<input id="genTopic" placeholder="e.g. Cell membrane and organelles">
+<label>Optional study notes</label>
+<textarea id="genNotes" placeholder="Paste notes to guide question generation"></textarea>
 <div class="row">
-<button onclick="showPage('cbt')">Start practice</button>
-<button class="secondary" onclick="showPage('bank')">Browse questions</button>
-<button class="secondary" onclick="showPage('backup')">Backup data</button>
+<div><label>Number of MCQs</label>
+<select id="genCount"><option>5</option><option>10</option><option>15</option><option>20</option></select></div>
+<div><label>Difficulty</label>
+<select id="genDifficulty"><option>Mixed</option><option>Easy</option><option>Moderate</option><option>Hard</option></select></div>
 </div>
-<p class="muted">Questions added here are stored in this browser on this device. They do not automatically sync to another device.</p>
-</div>
-<div class="panel">
-<h2>Question database</h2>
-<p id="dbInfo" class="muted">Checking database…</p>
-<p class="muted">This app does not automatically download a public question dataset. Import a compatible JSON file or add questions using the Add MCQ tab.</p>
+<button id="generateBtn">Generate MCQs</button>
+<button id="saveGeneratedBtn" disabled>Save generated MCQs to DB</button>
+<div id="genStatus" class="notice" style="margin-top:12px">Ready to generate.</div>
+<div id="generatedList"></div>
 </div>
 </section>
 
 <section id="page-cbt" class="page hidden">
 <div class="panel">
 <h2>CBT Practice</h2>
-<div class="row">
-<div><label for="cbtSubject">Subject</label>
-<select id="cbtSubject"><option>All</option><option>Biology</option><option>Physics</option><option>Chemistry</option></select></div>
-<div><label for="cbtChapter">Chapter filter (optional)</label><input id="cbtChapter" placeholder="e.g. Cell"></div>
+<label>Subject</label>
+<select id="cbtSubject"><option>All</option><option>Biology</option><option>Physics</option><option>Chemistry</option></select>
+<label>Number of questions</label>
+<select id="cbtCount"><option>10</option><option>20</option><option>45</option><option>90</option><option>180</option></select>
+<button id="startTest">Start Test</button>
+<div id="testArea"></div>
 </div>
-<div class="row">
-<div><label for="cbtCount">Number of questions</label><select id="cbtCount"><option>10</option><option>20</option><option>45</option><option>90</option><option>180</option></select></div>
-<div><label for="cbtMinutes">Time limit (minutes)</label><input id="cbtMinutes" type="number" min="0" max="600" value="30"></div>
-</div>
-<div class="row" style="margin-top:14px"><button id="startCbt">Start test</button><button class="secondary" id="stopCbt">Finish test</button></div>
-<p id="timer" class="muted">No test running</p>
-</div>
-<div id="testArea" class="panel hidden">
-<div class="row"><h3 id="questionNumber">Question</h3><span id="testProgress" class="muted"></span></div>
-<div id="testQuestion" class="question"></div>
-<div id="testOptions"></div>
-<div class="row" style="margin-top:12px">
-<button class="secondary" id="prevQ">Previous</button>
-<button id="nextQ">Next</button>
-<button class="secondary" id="submitTest">Submit test</button>
-</div>
-<div id="testFeedback" class="notice hidden"></div>
-</div>
-<div id="testResult" class="panel hidden"></div>
 </section>
 
 <section id="page-bank" class="page hidden">
 <div class="panel">
 <h2>Question Bank</h2>
-<div class="row">
-<div><label for="bankSubject">Subject</label><select id="bankSubject"><option>All</option><option>Biology</option><option>Physics</option><option>Chemistry</option></select></div>
-<div><label for="bankChapter">Chapter contains</label><input id="bankChapter" placeholder="Filter by chapter"></div>
-</div>
-<label for="bankSearch">Search question or topic</label><input id="bankSearch" placeholder="Type to search…">
-<div class="row" style="margin-top:12px"><button id="searchBank">Search</button><button class="secondary" id="refreshBank">Refresh</button></div>
+<label>Subject</label>
+<select id="bankSubject"><option>All</option><option>Biology</option><option>Physics</option><option>Chemistry</option></select>
+<label>Search questions / chapter / topic</label>
+<input id="bankSearch" placeholder="Search…">
+<button id="refreshBank">Refresh</button>
 <p id="bankCount" class="muted"></p>
 <div id="bankList"></div>
 </div>
@@ -141,582 +120,266 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:12px}
 <section id="page-add" class="page hidden">
 <div class="panel">
 <h2>Add MCQ</h2>
-<p class="muted">Add one question at a time. Questions are saved in your local browser database.</p>
-<label for="qSubject">Subject</label><select id="qSubject"><option>Biology</option><option>Physics</option><option>Chemistry</option></select>
-<label for="qChapter">Chapter</label><input id="qChapter" placeholder="Chapter name" required>
-<label for="qTopic">Topic</label><input id="qTopic" placeholder="Topic (optional)">
-<label for="qText">Question</label><textarea id="qText" placeholder="Enter question text" required></textarea>
-<div class="two">
-<div><label for="optA">Option A</label><input id="optA" required></div>
-<div><label for="optB">Option B</label><input id="optB" required></div>
-<div><label for="optC">Option C</label><input id="optC" required></div>
-<div><label for="optD">Option D</label><input id="optD" required></div>
-</div>
-<label for="qAnswer">Correct answer</label><select id="qAnswer"><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select>
-<label for="qExplanation">Explanation</label><textarea id="qExplanation" placeholder="Answer explanation (optional)"></textarea>
-<div class="row" style="margin-top:12px"><button id="saveQuestion">Save MCQ</button><button class="secondary" id="clearQuestion">Clear form</button></div>
-</div>
-<div class="panel">
-<h2>Import question JSON</h2>
-<p class="muted">Accepts a JSON array or an object containing a questions array. Existing questions are not cleared. Imported questions are added, not used to replace the database.</p>
-<label for="jsonFile">Select JSON file</label><input id="jsonFile" type="file" accept=".json,application/json">
-<button id="importJson" style="margin-top:12px">Import questions</button>
-<div id="importStatus" class="notice hidden"></div>
+<label>Subject</label>
+<select id="qSubject"><option>Biology</option><option>Physics</option><option>Chemistry</option></select>
+<label>Chapter</label><input id="qChapter">
+<label>Topic</label><input id="qTopic">
+<label>Question</label><textarea id="qText"></textarea>
+<label>Option A</label><input id="optA">
+<label>Option B</label><input id="optB">
+<label>Option C</label><input id="optC">
+<label>Option D</label><input id="optD">
+<label>Correct answer</label><select id="qAnswer"><option>A</option><option>B</option><option>C</option><option>D</option></select>
+<label>Explanation</label><textarea id="qExplanation"></textarea>
+<button id="saveQuestion">Save MCQ</button>
 </div>
 </section>
 
 <section id="page-analysis" class="page hidden">
-<div class="panel">
-<h2>Performance Analysis</h2>
-<div class="grid">
-<div class="stat"><strong id="anaAttempted">0</strong><span>Answered</span></div>
-<div class="stat"><strong id="anaCorrect">0</strong><span>Correct</span></div>
-<div class="stat"><strong id="anaAccuracy">0%</strong><span>Accuracy</span></div>
-<div class="stat"><strong id="anaTests">0</strong><span>Test sessions</span></div>
-</div>
-</div>
-<div class="panel">
-<h2>Subject summary</h2><div id="subjectAnalysis"></div>
-</div>
-<div class="panel">
-<h2>Recent test attempts</h2><div id="attemptList"></div>
-</div>
+<div class="panel"><h2>Performance Analysis</h2><div id="analysis"></div></div>
 </section>
 
 <section id="page-backup" class="page hidden">
 <div class="panel">
 <h2>Backup and Restore</h2>
-<p><b>Download backup:</b> save your questions and test attempts to a JSON file before making major changes.</p>
-<button id="exportBackup">Download full backup</button>
-<hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
-<p><b>Restore/import:</b> choose a previously downloaded backup. Records are merged into the current database; this does not clear existing records.</p>
-<label for="restoreFile">Choose backup JSON</label><input id="restoreFile" type="file" accept=".json,application/json">
-<button id="restoreBackup" style="margin-top:12px">Restore backup</button>
-<div id="backupStatus" class="notice hidden"></div>
-</div>
-<div class="panel">
-<h2>Important storage information</h2>
-<ul>
-<li>Data is stored in this browser on this device.</li>
-<li>Clearing browser site data can remove locally stored records.</li>
-<li>Use backups regularly and keep a copy outside your phone.</li>
-<li>This app does not upload your questions to a server.</li>
-</ul>
+<p>Export your questions and test records before making major changes.</p>
+<button id="exportBackup">Download JSON Backup</button>
+<label>Restore JSON backup</label><input id="backupFile" type="file" accept=".json,application/json">
+<button id="restoreBackup">Restore Backup</button>
+<p id="backupStatus" class="notice"></p>
 </div>
 </section>
 
 <section id="page-settings" class="page hidden">
 <div class="panel">
-<h2>Settings</h2>
-<p id="settingsStatus" class="notice">Local database status will appear here.</p>
-<label for="aiKey">Optional AI API key (session only)</label>
-<input id="aiKey" type="password" autocomplete="off" placeholder="Enter only if you understand API-key risks">
-<p class="muted">This sample does not call an AI service. A key typed here is not saved or sent anywhere. Do not put secret API keys into a public HTML file.</p>
-<button class="secondary" id="clearKey">Clear key field</button>
-</div>
-<div class="panel">
-<h2>About</h2>
-<p>NEET AI Pro</p>
-<p class="muted">Created by Bharat Patel. Use the Backup tab to protect your local data.</p>
+<h2>OpenAI API Settings</h2>
+<p><b>Security:</b> This direct-browser demo sends your key from this page to OpenAI. A public website is safer when API requests go through a backend. Do not commit your key into GitHub.</p>
+<label>OpenAI API key (session only)</label>
+<input id="apiKey" type="password" autocomplete="off" placeholder="Paste API key for this session">
+<label>Model</label>
+<select id="apiModel"><option value="gpt-4.1-mini">gpt-4.1-mini</option><option value="gpt-4.1">gpt-4.1</option></select>
+<button id="clearKey" class="secondary">Clear API key</button>
+<p id="dbInfo" class="notice"></p>
+<p class="muted">API usage may incur charges. ChatGPT subscription and API billing are separate.</p>
 </div>
 </section>
 </main>
-<footer>NEET AI Pro • Local browser storage • Created by Bharat Patel</footer>
+<footer>NEET AI Pro • Local browser database • Created by Bharat Patel</footer>
 
 <script>
 "use strict";
+const DB_NAME="NEET_AI_Pro_DB";
+const DB_VERSION=1;
+let db,allQuestions=[],allAttempts=[],generatedQuestions=[],testQuestions=[],testAnswers={},testIndex=0;
+const $=id=>document.getElementById(id);
+const makeId=()=> "q_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,9);
+function setStatus(s){$("status").textContent=s}
+function showPage(name){
+ document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
+ $("page-"+name).classList.remove("hidden");
+ if(name==="bank")renderBank();
+ if(name==="analysis")renderAnalysis();
+}
+document.querySelectorAll("[data-page]").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
 
-const DB_NAME = "NEET_AI_Pro_DB";
-const DB_VERSION = 1;
-let db;
-let allQuestions = [];
-let allAttempts = [];
-let testQuestions = [];
-let testAnswers = {};
-let testIndex = 0;
-let testActive = false;
-let testStartedAt = null;
-let testDeadline = null;
-let timerHandle = null;
-
-const $ = id => document.getElementById(id);
-const makeId = () => "q_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2,10);
-
-function setStatus(message) { $("status").textContent = message; }
-
-function showPage(name) {
-  document.querySelectorAll(".page").forEach(p => p.classList.add("hidden"));
-  const page = $("page-" + name);
-  if (page) page.classList.remove("hidden");
-  if (name === "bank") renderBank();
-  if (name === "analysis") renderAnalysis();
-  if (name === "home") renderHome();
+function openDatabase(){return new Promise((resolve,reject)=>{
+ const req=indexedDB.open(DB_NAME,DB_VERSION);
+ req.onupgradeneeded=()=>{
+  const d=req.result;
+  if(!d.objectStoreNames.contains("questions"))d.createObjectStore("questions",{keyPath:"id"});
+  if(!d.objectStoreNames.contains("attempts"))d.createObjectStore("attempts",{keyPath:"id"});
+ };
+ req.onsuccess=()=>{db=req.result;resolve(db)};
+ req.onerror=()=>reject(req.error);
+});}
+function getAll(store){return new Promise((resolve,reject)=>{
+ const tx=db.transaction(store,"readonly"),r=tx.objectStore(store).getAll();
+ r.onsuccess=()=>resolve(r.result||[]);r.onerror=()=>reject(r.error);
+});}
+function putRecord(store,record){return new Promise((resolve,reject)=>{
+ const tx=db.transaction(store,"readwrite");
+ tx.objectStore(store).put(record);
+ tx.oncomplete=()=>resolve(true);
+ tx.onerror=()=>reject(tx.error||new Error("Database write failed"));
+ tx.onabort=()=>reject(tx.error||new Error("Database write aborted"));
+});}
+async function refreshData(){
+ allQuestions=await getAll("questions");allAttempts=await getAll("attempts");
+ $("totalQ").textContent=allQuestions.length;
+ $("totalTests").textContent=allAttempts.length;
+ $("dbInfo").textContent="Database: "+DB_NAME+" • Questions: "+allQuestions.length+" • Attempts: "+allAttempts.length;
+}
+function normalizeQuestion(q){
+ if(!q||typeof q!=="object")return null;
+ const question=String(q.question||q.question_text||q.text||"").trim();
+ let options=q.options||q.choices||[];
+ if(!Array.isArray(options)&&options&&typeof options==="object")options=["A","B","C","D"].map(k=>options[k]||options[k.toLowerCase()]||"");
+ if(options.length===4&&question){
+  let answer=String(q.answer||q.correct_answer||"A").trim().toUpperCase();
+  if(/^[0-3]$/.test(answer))answer="ABCD"[Number(answer)];
+  if(!"ABCD".includes(answer))answer="A";
+  return {id:q.id||makeId(),subject:q.subject||"Biology",chapter:q.chapter||q.category||"Unspecified",topic:q.topic||"",question,options:options.map(String),answer,explanation:String(q.explanation||q.rationale||""),source:q.source||"Imported"};
+ }
+ return null;
 }
 
-document.querySelectorAll("[data-page]").forEach(btn => {
-  btn.addEventListener("click", () => showPage(btn.dataset.page));
+/* MCQ GENERATION */
+$("generateBtn").addEventListener("click",generateMCQs);
+async function generateMCQs(){
+ const key=$("apiKey").value.trim();
+ const subject=$("genSubject").value,chapter=$("genChapter").value.trim(),topic=$("genTopic").value.trim();
+ if(!key){$("genStatus").textContent="Open Settings and enter your OpenAI API key first.";showPage("settings");return}
+ if(!chapter||!topic){$("genStatus").textContent="Enter a chapter and topic first.";return}
+ $("generateBtn").disabled=true;$("saveGeneratedBtn").disabled=true;
+ $("generatedList").replaceChildren();generatedQuestions=[];
+ $("genStatus").textContent="Generating questions with OpenAI…";
+ const count=Number($("genCount").value);
+ const notes=$("genNotes").value.trim().slice(0,10000);
+ const prompt=`Create exactly ${count} original NEET-style MCQs.
+Subject: ${subject}. Chapter: ${chapter}. Topic: ${topic}.
+Difficulty: ${$("genDifficulty").value}.
+${notes?"Use these notes as reference: "+notes:"Use accurate standard NEET syllabus knowledge."}
+Return valid JSON only: {"questions":[{"question":"...","options":["...","...","...","..."],"answer":"A","explanation":"...","subject":"${subject}","chapter":"${chapter}","topic":"${topic}"}]}.
+Exactly four options per question and answer must be A, B, C or D. Avoid duplicate questions.`;
+ try{
+  const res=await fetch("https://api.openai.com/v1/responses",{
+   method:"POST",
+   headers:{"Content-Type":"application/json","Authorization":"Bearer "+key},
+   body:JSON.stringify({model:$("apiModel").value,input:prompt,text:{format:{type:"json_object"}}})
+  });
+  const data=await res.json();
+  if(!res.ok)throw new Error(data.error?.message||"OpenAI request failed: "+res.status);
+  let out=data.output_text||"";
+  if(!out&&Array.isArray(data.output))out=data.output.flatMap(x=>x.content||[]).map(x=>x.text||"").join("");
+  const parsed=JSON.parse(out),arr=Array.isArray(parsed)?parsed:parsed.questions;
+  if(!Array.isArray(arr))throw new Error("AI response did not contain a questions array.");
+  generatedQuestions=arr.map(q=>normalizeQuestion({...q,subject,chapter,topic,source:"AI generated"})).filter(Boolean);
+  if(!generatedQuestions.length)throw new Error("No valid MCQs returned. Try another topic.");
+  renderGenerated();
+  $("saveGeneratedBtn").disabled=false;
+  $("genStatus").textContent=generatedQuestions.length+" MCQs generated. Review them, then tap Save generated MCQs to DB.";
+ }catch(e){$("genStatus").textContent="Generation failed: "+e.message+" Check your API key, API billing, internet and model access."}
+ finally{$("generateBtn").disabled=false}
+}
+function renderGenerated(){
+ const list=$("generatedList");list.replaceChildren();
+ generatedQuestions.forEach((q,i)=>{
+  const card=document.createElement("div");card.className="card";
+  const h=document.createElement("h3");h.textContent=(i+1)+". "+q.question;card.appendChild(h);
+  q.options.forEach((op,j)=>{const p=document.createElement("p");p.textContent="ABCD"[j]+". "+op;card.appendChild(p)});
+  const a=document.createElement("p");a.textContent="Correct answer: "+q.answer;card.appendChild(a);
+  const ex=document.createElement("p");ex.textContent="Explanation: "+q.explanation;card.appendChild(ex);
+  list.appendChild(card);
+ });
+}
+$("saveGeneratedBtn").addEventListener("click",async()=>{
+ if(!generatedQuestions.length)return;
+ $("saveGeneratedBtn").disabled=true;
+ try{
+  let saved=0;
+  for(const q of generatedQuestions){await putRecord("questions",{...q,id:makeId(),source:"AI generated",createdAt:new Date().toISOString()});saved++}
+  await refreshData();renderBank();
+  $("genStatus").textContent=saved+" MCQs saved to "+DB_NAME+" on this browser.";
+  generatedQuestions=[];$("generatedList").replaceChildren();
+ }catch(e){$("genStatus").textContent="Save failed: "+e.message+"; your existing database has not been intentionally cleared.";$("saveGeneratedBtn").disabled=false}
 });
 
-function openDatabase() {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, DB_VERSION);
-    request.onupgradeneeded = () => {
-      const database = request.result;
-      // Only create missing stores. Never delete existing stores or records.
-      if (!database.objectStoreNames.contains("questions")) {
-        database.createObjectStore("questions", {keyPath:"id"});
-      }
-      if (!database.objectStoreNames.contains("attempts")) {
-        database.createObjectStore("attempts", {keyPath:"id"});
-      }
-    };
-    request.onsuccess = () => {
-      db = request.result;
-      db.onversionchange = () => db.close();
-      resolve(db);
-    };
-    request.onerror = () => reject(request.error || new Error("Could not open IndexedDB"));
-    request.onblocked = () => setStatus("Database upgrade is blocked. Close other tabs of this app and reload.");
-  });
-}
-
-function getAll(storeName) {
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(storeName, "readonly");
-    const req = tx.objectStore(storeName).getAll();
-    req.onsuccess = () => resolve(req.result || []);
-    req.onerror = () => reject(req.error);
-  });
-}
-
-function putRecord(storeName, record) {
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(storeName, "readwrite");
-    tx.objectStore(storeName).put(record);
-    tx.oncomplete = () => resolve(true);
-    tx.onerror = () => reject(tx.error || new Error("Save failed"));
-    tx.onabort = () => reject(tx.error || new Error("Save cancelled"));
-  });
-}
-
-function normalizeQuestion(raw) {
-  if (!raw || typeof raw !== "object") return null;
-  const text = String(raw.question ?? raw.question_text ?? raw.text ?? raw.q ?? "").trim();
-  if (!text) return null;
-
-  let opts = raw.options ?? raw.choices ?? raw.answers ?? [];
-  if (!Array.isArray(opts) && opts && typeof opts === "object") {
-    opts = ["A","B","C","D"].map(k => opts[k] ?? opts[k.toLowerCase()] ?? "");
-  }
-  if (!Array.isArray(opts)) opts = [];
-  const letters = ["A","B","C","D"];
-  const options = letters.map((letter, i) => {
-    const item = opts[i] ?? raw[letter] ?? raw["option"+letter] ?? raw["option_"+letter.toLowerCase()] ?? "";
-    return String(typeof item === "object" ? (item.text ?? item.value ?? "") : item).trim();
-  });
-
-  let answer = raw.correctAnswer ?? raw.correct_answer ?? raw.answer ?? raw.ans ?? raw.key ?? "";
-  if (typeof answer === "number") answer = letters[answer] || "";
-  if (typeof answer === "string") {
-    const cleaned = answer.trim().toUpperCase();
-    const match = cleaned.match(/^(A|B|C|D)\b/);
-    answer = match ? match[1] : cleaned;
-    if (!letters.includes(answer)) {
-      const idx = options.findIndex(o => o && o.toLowerCase() === String(raw.answer ?? "").trim().toLowerCase());
-      answer = idx >= 0 ? letters[idx] : "";
-    }
-  }
-  if (!letters.includes(answer)) answer = "";
-
-  const subjectRaw = String(raw.subject ?? raw.sub ?? "Biology").toLowerCase();
-  let subject = "Biology";
-  if (subjectRaw.includes("phys")) subject = "Physics";
-  if (subjectRaw.includes("chem")) subject = "Chemistry";
-  if (subjectRaw.includes("all")) subject = "All";
-
-  return {
-    id: String(raw.id ?? raw._id ?? makeId()),
-    subject,
-    chapter: String(raw.chapter ?? raw.chapter_name ?? raw.unit ?? "Uncategorised"),
-    topic: String(raw.topic ?? raw.topic_name ?? ""),
-    question: text,
-    options,
-    answer,
-    explanation: String(raw.explanation ?? raw.solution ?? raw.rationale ?? ""),
-    source: String(raw.source ?? "Local"),
-    createdAt: raw.createdAt ?? new Date().toISOString()
-  };
-}
-
-async function refreshData() {
-  allQuestions = (await getAll("questions")).map(normalizeQuestion).filter(Boolean);
-  allAttempts = await getAll("attempts");
-  renderHome();
-}
-
-function renderHome() {
-  $("totalQ").textContent = allQuestions.length;
-  const answered = allAttempts.reduce((sum,a) => sum + (Array.isArray(a.responses) ? a.responses.length : 0), 0);
-  const correct = allAttempts.reduce((sum,a) => sum + Number(a.correct || 0), 0);
-  $("totalA").textContent = answered;
-  $("accuracy").textContent = (answered ? Math.round(correct / answered * 100) : 0) + "%";
-  $("totalTests").textContent = allAttempts.length;
-  $("dbInfo").textContent = "Database: " + DB_NAME + ". Questions store: " + allQuestions.length + ". Attempt records: " + allAttempts.length + ".";
-}
-
-function getFilteredQuestions(subject, chapter) {
-  const s = (subject || "All").toLowerCase();
-  const c = (chapter || "").trim().toLowerCase();
-  return allQuestions.filter(q =>
-    (s === "all" || q.subject.toLowerCase() === s) &&
-    (!c || q.chapter.toLowerCase().includes(c) || q.topic.toLowerCase().includes(c))
-  );
-}
-
-function renderBank() {
-  const subject = $("bankSubject").value;
-  const chapter = $("bankChapter").value.trim().toLowerCase();
-  const search = $("bankSearch").value.trim().toLowerCase();
-  const filtered = allQuestions.filter(q =>
-    (subject === "All" || q.subject === subject) &&
-    (!chapter || q.chapter.toLowerCase().includes(chapter)) &&
-    (!search || [q.question,q.chapter,q.topic,q.explanation,q.subject].join(" ").toLowerCase().includes(search))
-  );
-  $("bankCount").textContent = filtered.length + " question(s) found.";
-  const container = $("bankList");
-  container.replaceChildren();
-  if (!filtered.length) {
-    container.textContent = "No matching questions found. Add questions or import a JSON file.";
-    return;
-  }
-  filtered.slice(0,200).forEach((q, i) => {
-    const card = document.createElement("div");
-    card.className = "panel";
-    const title = document.createElement("h3");
-    title.textContent = (i+1) + ". " + q.question;
-    card.appendChild(title);
-    const meta = document.createElement("p");
-    meta.className = "muted";
-    meta.textContent = q.subject + " • " + q.chapter + (q.topic ? " • " + q.topic : "");
-    card.appendChild(meta);
-    q.options.forEach((option,j) => {
-      const p = document.createElement("p");
-      p.textContent = ["A","B","C","D"][j] + ". " + (option || "(empty)");
-      card.appendChild(p);
-    });
-    const show = document.createElement("button");
-    show.className = "secondary";
-    show.textContent = "Show answer and explanation";
-    const details = document.createElement("div");
-    details.className = "hidden notice";
-    const answer = document.createElement("p");
-    answer.textContent = "Correct answer: " + (q.answer || "Not provided");
-    const explanation = document.createElement("p");
-    explanation.textContent = q.explanation || "No explanation provided.";
-    details.append(answer,explanation);
-    show.addEventListener("click", () => details.classList.toggle("hidden"));
-    card.append(show,details);
-    container.appendChild(card);
-  });
-  if (filtered.length > 200) {
-    const note = document.createElement("p");
-    note.className = "muted";
-    note.textContent = "Showing first 200 matches. Narrow your search to see other questions.";
-    container.appendChild(note);
-  }
-}
-
-function shuffle(list) {
-  const a = list.slice();
-  for (let i=a.length-1;i>0;i--) {
-    const j = Math.floor(Math.random()*(i+1));
-    [a[i],a[j]]=[a[j],a[i]];
-  }
-  return a;
-}
-
-function startTest() {
-  if (testActive) {
-    if (!confirm("Start a new test and abandon the current test?")) return;
-    stopTimer();
-  }
-  const pool = getFilteredQuestions($("cbtSubject").value, $("cbtChapter").value);
-  if (!pool.length) {
-    alert("No questions match this selection. Add or import questions first.");
-    return;
-  }
-  const count = Math.min(Number($("cbtCount").value) || 10, pool.length);
-  testQuestions = shuffle(pool).slice(0,count);
-  testAnswers = {};
-  testIndex = 0;
-  testActive = true;
-  testStartedAt = Date.now();
-  const minutes = Math.max(0, Number($("cbtMinutes").value) || 0);
-  testDeadline = minutes ? Date.now() + minutes*60000 : null;
-  $("testArea").classList.remove("hidden");
-  $("testResult").classList.add("hidden");
-  $("testFeedback").classList.add("hidden");
-  if (testDeadline) {
-    $("timer").textContent = "Time remaining: " + minutes + " minutes";
-    timerHandle = setInterval(updateTimer,1000);
-  } else $("timer").textContent = "Timer disabled";
-  renderTestQuestion();
-}
-
-function stopTimer() {
-  if (timerHandle) clearInterval(timerHandle);
-  timerHandle = null;
-}
-
-function updateTimer() {
-  if (!testActive || !testDeadline) return;
-  const left = Math.max(0, testDeadline-Date.now());
-  const mins = Math.floor(left/60000);
-  const secs = Math.floor((left%60000)/1000);
-  $("timer").textContent = "Time remaining: " + mins + ":" + String(secs).padStart(2,"0");
-  if (left <= 0) finishTest(true);
-}
-
-function renderTestQuestion() {
-  const q = testQuestions[testIndex];
-  if (!q) return;
-  $("questionNumber").textContent = "Question " + (testIndex+1);
-  $("testProgress").textContent = (testIndex+1) + " of " + testQuestions.length;
-  $("testQuestion").textContent = q.question;
-  const box = $("testOptions");
-  box.replaceChildren();
-  ["A","B","C","D"].forEach((letter,i) => {
-    const label = document.createElement("label");
-    label.className = "option";
-    const input = document.createElement("input");
-    input.type = "radio";
-    input.name = "testOption";
-    input.value = letter;
-    input.checked = testAnswers[q.id] === letter;
-    input.addEventListener("change", () => { testAnswers[q.id] = letter; });
-    label.append(input,document.createTextNode(letter + ". " + (q.options[i] || "(empty)")));
-    box.appendChild(label);
-  });
-  $("prevQ").disabled = testIndex === 0;
-  $("nextQ").disabled = testIndex === testQuestions.length-1;
-  $("testFeedback").classList.add("hidden");
-}
-
-async function finishTest(auto=false) {
-  if (!testActive) return;
-  if (!auto && !confirm("Submit this test now?")) return;
-  testActive = false;
-  stopTimer();
-  const responses = testQuestions.map(q => ({
-    questionId:q.id,
-    subject:q.subject,
-    chapter:q.chapter,
-    question:q.question,
-    selected:testAnswers[q.id] || "",
-    answer:q.answer || "",
-    correct:Boolean(q.answer && testAnswers[q.id] === q.answer)
-  }));
-  const correct = responses.filter(r=>r.correct).length;
-  const answered = responses.filter(r=>r.selected).length;
-  const attempt = {
-    id:makeId(),
-    date:new Date().toISOString(),
-    subject:$("cbtSubject").value,
-    total:responses.length,
-    answered,
-    correct,
-    incorrect:responses.filter(r=>r.selected && !r.correct).length,
-    unanswered:responses.length-answered,
-    responses,
-    durationSeconds:Math.max(0,Math.round((Date.now()-testStartedAt)/1000))
-  };
-  try {
-    await putRecord("attempts",attempt);
-    await refreshData();
-    $("testResult").classList.remove("hidden");
-    $("testResult").replaceChildren();
-    const h = document.createElement("h2"); h.textContent = auto ? "Time is up — test submitted" : "Test result";
-    const p = document.createElement("p"); p.textContent = "Score: "+correct+"/"+responses.length+" ("+Math.round(correct/Math.max(1,responses.length)*100)+"%). Answered: "+answered+". Incorrect: "+attempt.incorrect+". Unanswered: "+attempt.unanswered+".";
-    $("testResult").append(h,p);
-    const review = document.createElement("h3"); review.textContent = "Answer review";
-    $("testResult").appendChild(review);
-    responses.forEach((r,i)=>{
-      const item = document.createElement("div"); item.className="notice";
-      const q = testQuestions[i];
-      const title = document.createElement("p"); title.textContent=(i+1)+". "+q.question;
-      const result = document.createElement("p"); result.className=r.correct?"correct":(r.selected?"incorrect":""); result.textContent="Your answer: "+(r.selected||"Not answered")+" • Correct answer: "+(r.answer||"Not provided");
-      const exp = document.createElement("p"); exp.textContent=q.explanation||"No explanation available.";
-      item.append(title,result,exp); $("testResult").appendChild(item);
-    });
-    $("testResult").scrollIntoView({behavior:"smooth",block:"start"});
-  } catch(e) { alert("Could not save test attempt: "+e.message); }
-  $("timer").textContent="Test finished";
-}
-
-$("startCbt").addEventListener("click",startTest);
-$("stopCbt").addEventListener("click",()=>finishTest(false));
-$("submitTest").addEventListener("click",()=>finishTest(false));
-$("prevQ").addEventListener("click",()=>{if(testIndex>0){testIndex--;renderTestQuestion();}});
-$("nextQ").addEventListener("click",()=>{if(testIndex<testQuestions.length-1){testIndex++;renderTestQuestion();}});
-$("searchBank").addEventListener("click",renderBank);
-$("refreshBank").addEventListener("click",renderBank);
-$("bankSearch").addEventListener("input",renderBank);
-$("bankSubject").addEventListener("change",renderBank);
-$("bankChapter").addEventListener("input",renderBank);
-
-function clearQuestionForm() {
-  ["qChapter","qTopic","qText","optA","optB","optC","optD","qExplanation"].forEach(id=>$(id).value="");
-  $("qSubject").value="Biology";
-  $("qAnswer").value="A";
-}
-
-$("clearQuestion").addEventListener("click",clearQuestionForm);
+/* MANUAL MCQ SAVE */
 $("saveQuestion").addEventListener("click",async()=>{
-  const raw={
-    id:makeId(),
-    subject:$("qSubject").value,
-    chapter:$("qChapter").value.trim(),
-    topic:$("qTopic").value.trim(),
-    question:$("qText").value.trim(),
-    options:[$("optA").value.trim(),$("optB").value.trim(),$("optC").value.trim(),$("optD").value.trim()],
-    answer:$("qAnswer").value,
-    explanation:$("qExplanation").value.trim(),
-    source:"User added"
-  };
-  if(!raw.chapter||!raw.question||raw.options.some(o=>!o)){
-    alert("Please enter the chapter, question and all four options.");
-    return;
-  }
-  try {
-    await putRecord("questions",raw);
-    await refreshData();
-    clearQuestionForm();
-    alert("Question saved to this browser.");
-  } catch(e){alert("Save failed: "+e.message);}
+ const q=normalizeQuestion({
+  subject:$("qSubject").value,chapter:$("qChapter").value.trim(),topic:$("qTopic").value.trim(),
+  question:$("qText").value.trim(),options:[$("optA").value.trim(),$("optB").value.trim(),$("optC").value.trim(),$("optD").value.trim()],
+  answer:$("qAnswer").value,explanation:$("qExplanation").value.trim(),source:"User added"
+ });
+ if(!q||!q.chapter||q.options.some(x=>!x)){alert("Complete chapter, question and all four options.");return}
+ try{await putRecord("questions",q);await refreshData();alert("MCQ saved to local database.");}
+ catch(e){alert("Save failed: "+e.message)}
 });
 
-function extractQuestionArray(data) {
-  if(Array.isArray(data)) return data;
-  if(data && Array.isArray(data.questions)) return data.questions;
-  if(data && data.data && Array.isArray(data.data.questions)) return data.data.questions;
-  if(data && data.results && Array.isArray(data.results)) return data.results;
-  throw new Error("Could not find a questions array in this JSON file.");
+/* QUESTION BANK */
+$("refreshBank").addEventListener("click",renderBank);
+$("bankSubject").addEventListener("change",renderBank);
+$("bankSearch").addEventListener("input",renderBank);
+function renderBank(){
+ const list=$("bankList");list.replaceChildren();
+ const sub=$("bankSubject").value,term=$("bankSearch").value.toLowerCase();
+ const qs=allQuestions.filter(q=>(sub==="All"||q.subject===sub)&&[q.question,q.chapter,q.topic].join(" ").toLowerCase().includes(term));
+ $("bankCount").textContent=qs.length+" question(s)";
+ qs.slice(0,300).forEach(q=>{
+  const d=document.createElement("div");d.className="card";
+  const h=document.createElement("b");h.textContent=q.question;d.appendChild(h);
+  (q.options||[]).forEach((o,i)=>{const p=document.createElement("p");p.textContent="ABCD"[i]+". "+o;d.appendChild(p)});
+  const a=document.createElement("p");a.textContent="Answer: "+q.answer+" | "+(q.chapter||"");d.appendChild(a);
+  const ex=document.createElement("p");ex.textContent=q.explanation||"";d.appendChild(ex);
+  list.appendChild(d);
+ });
 }
 
-async function importQuestionFile(file, statusElement) {
-  if(!file) throw new Error("Choose a JSON file first.");
-  const data=JSON.parse(await file.text());
-  const arr=extractQuestionArray(data);
-  let added=0, skipped=0;
-  for(const raw of arr) {
-    const q=normalizeQuestion(raw);
-    if(!q){skipped++;continue;}
-    // Preserve an incoming ID where possible; duplicate IDs update the same record.
-    await putRecord("questions",q);
-    added++;
-  }
-  await refreshData();
-  statusElement.textContent="Import finished. Processed "+added+" question(s); skipped "+skipped+". Existing records were not cleared.";
-  statusElement.classList.remove("hidden");
-}
-
-$("importJson").addEventListener("click",async()=>{
-  $("importStatus").classList.remove("hidden");
-  try{await importQuestionFile($("jsonFile").files[0],$("importStatus"));}
-  catch(e){$("importStatus").textContent="Import error: "+e.message;}
+/* CBT */
+$("startTest").addEventListener("click",()=>{
+ const sub=$("cbtSubject").value;
+ const pool=allQuestions.filter(q=>sub==="All"||q.subject===sub);
+ if(!pool.length){$("testArea").textContent="No saved questions for this selection. Generate or import MCQs first.";return}
+ testQuestions=[...pool].sort(()=>Math.random()-.5).slice(0,Math.min(Number($("cbtCount").value),pool.length));
+ testAnswers={};testIndex=0;renderTestQuestion();
 });
-
-function downloadJSON(filename,data) {
-  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement("a");
-  a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();
-  setTimeout(()=>URL.revokeObjectURL(url),1000);
+function renderTestQuestion(){
+ const area=$("testArea");area.replaceChildren();
+ if(!testQuestions.length)return;
+ const q=testQuestions[testIndex],h=document.createElement("h3");
+ h.textContent="Question "+(testIndex+1)+" of "+testQuestions.length;area.appendChild(h);
+ const p=document.createElement("p");p.textContent=q.question;area.appendChild(p);
+ q.options.forEach((o,i)=>{
+  const label=document.createElement("label");label.className="option";
+  const radio=document.createElement("input");radio.type="radio";radio.name="answer";
+  radio.checked=testAnswers[q.id]==="ABCD"[i];
+  radio.addEventListener("change",()=>testAnswers[q.id]="ABCD"[i]);
+  label.appendChild(radio);label.append(" "+"ABCD"[i]+". "+o);area.appendChild(label);
+ });
+ const row=document.createElement("div");row.className="row";
+ const prev=document.createElement("button");prev.textContent="Previous";prev.disabled=testIndex===0;prev.onclick=()=>{testIndex--;renderTestQuestion()};
+ const next=document.createElement("button");next.textContent=testIndex===testQuestions.length-1?"Submit Test":"Next";
+ next.onclick=async()=>{if(testIndex<testQuestions.length-1){testIndex++;renderTestQuestion()}else await finishTest()};
+ row.append(prev,next);area.appendChild(row);
+}
+async function finishTest(){
+ let correct=0,attempted=0;
+ testQuestions.forEach(q=>{if(testAnswers[q.id]){attempted++;if(testAnswers[q.id]===q.answer)correct++}});
+ const attempt={id:makeId(),date:new Date().toISOString(),subject:$("cbtSubject").value,total:testQuestions.length,attempted,correct,answers:testAnswers};
+ try{await putRecord("attempts",attempt);await refreshData();$("testArea").textContent="Test completed: "+correct+"/"+testQuestions.length+" correct. Attempt saved."}
+ catch(e){$("testArea").textContent="Test finished, but saving attempt failed: "+e.message}
 }
 
+/* BACKUP / RESTORE */
 $("exportBackup").addEventListener("click",async()=>{
-  try{
-    const questions=await getAll("questions");
-    const attempts=await getAll("attempts");
-    downloadJSON("neet-ai-pro-backup-"+new Date().toISOString().slice(0,10)+".json",{
-      app:"NEET AI Pro",version:1,exportedAt:new Date().toISOString(),questions,attempts
-    });
-    $("backupStatus").textContent="Backup download requested. Check your Downloads folder.";
-    $("backupStatus").classList.remove("hidden");
-  }catch(e){alert("Backup failed: "+e.message);}
+ try{
+  const data={database:DB_NAME,exportedAt:new Date().toISOString(),questions:await getAll("questions"),attempts:await getAll("attempts")};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="neet-ai-pro-backup.json";a.click();URL.revokeObjectURL(url);
+  $("backupStatus").textContent="Backup export requested.";
+ }catch(e){$("backupStatus").textContent="Export failed: "+e.message}
 });
-
 $("restoreBackup").addEventListener("click",async()=>{
-  const file=$("restoreFile").files[0];
-  const status=$("backupStatus");
-  status.classList.remove("hidden");
-  try{
-    if(!file) throw new Error("Choose a backup JSON file first.");
-    const data=JSON.parse(await file.text());
-    let qCount=0,aCount=0;
-    const qs=Array.isArray(data)?data:(data.questions||data.data?.questions||[]);
-    for(const raw of qs){
-      const q=normalizeQuestion(raw);
-      if(q){await putRecord("questions",q);qCount++;}
-    }
-    if(Array.isArray(data.attempts)){
-      for(const a of data.attempts){
-        if(a && typeof a==="object"){
-          const record={...a,id:String(a.id||makeId())};
-          await putRecord("attempts",record);aCount++;
-        }
-      }
-    }
-    await refreshData();
-    status.textContent="Restore/merge complete. Questions processed: "+qCount+". Attempts processed: "+aCount+". Current records were not cleared.";
-  }catch(e){status.textContent="Restore error: "+e.message;}
+ const f=$("backupFile").files[0];if(!f){$("backupStatus").textContent="Choose a JSON backup first.";return}
+ try{
+  const data=JSON.parse(await f.text());
+  if(!Array.isArray(data.questions)||!Array.isArray(data.attempts))throw new Error("Backup must contain questions and attempts arrays.");
+  for(const raw of data.questions){const q=normalizeQuestion(raw);if(q)await putRecord("questions",q)}
+  for(const a of data.attempts){if(a&&a.id)await putRecord("attempts",a)}
+  await refreshData();$("backupStatus").textContent="Backup restored. Existing records were not cleared.";
+ }catch(e){$("backupStatus").textContent="Restore failed: "+e.message}
 });
+$("clearKey").addEventListener("click",()=>$("apiKey").value="");
 
-function renderAnalysis() {
-  const responses=allAttempts.flatMap(a=>Array.isArray(a.responses)?a.responses:[]);
-  const correct=responses.filter(r=>r.correct).length;
-  $("anaAttempted").textContent=responses.filter(r=>r.selected).length;
-  $("anaCorrect").textContent=correct;
-  $("anaAccuracy").textContent=(responses.length?Math.round(correct/responses.length*100):0)+"%";
-  $("anaTests").textContent=allAttempts.length;
-  const subjects=["Biology","Physics","Chemistry"];
-  const summary=$("subjectAnalysis");summary.replaceChildren();
-  subjects.forEach(s=>{
-    const subset=responses.filter(r=>r.subject===s);
-    const c=subset.filter(r=>r.correct).length;
-    const p=document.createElement("p");
-    p.textContent=s+": "+c+" correct out of "+subset.length+" recorded response(s)"+(subset.length?" ("+Math.round(c/subset.length*100)+"%)":"");
-    summary.appendChild(p);
-  });
-  const list=$("attemptList");list.replaceChildren();
-  if(!allAttempts.length){list.textContent="No completed test attempts yet.";return;}
-  [...allAttempts].sort((a,b)=>String(b.date||"").localeCompare(String(a.date||""))).slice(0,30).forEach(a=>{
-    const p=document.createElement("p");
-    p.textContent=(a.date?new Date(a.date).toLocaleString():"Test")+" — "+(a.subject||"All subjects")+" — "+(a.correct||0)+"/"+(a.total||0)+" correct";
-    list.appendChild(p);
-  });
+async function init(){
+ try{
+  await openDatabase();await refreshData();renderBank();
+  setStatus("Local database opened successfully. "+allQuestions.length+" MCQ(s) found.");
+ }catch(e){setStatus("Database error: "+e.message+". Do not clear browser data.");}
 }
-
-$("clearKey").addEventListener("click",()=>$("aiKey").value="");
-
-async function init() {
-  if(!("indexedDB" in window)){
-    setStatus("This browser does not support IndexedDB. Open the app in a modern browser.");
-    return;
-  }
-  try{
-    await openDatabase();
-    await refreshData();
-    renderBank();
-    renderAnalysis();
-    $("settingsStatus").textContent="Database: "+DB_NAME+". Questions and attempts are stored locally in this browser.";
-    setStatus("Local database opened successfully. "+allQuestions.length+" question(s) found.");
-  }catch(e){
-    setStatus("Database error: "+e.message+". Do not clear browser data while troubleshooting.");
-    console.error(e);
-  }
+function renderAnalysis(){
+ $("analysis").textContent=allAttempts.length+" saved test attempt(s).";
 }
-
 init();
 </script>
 </body>
